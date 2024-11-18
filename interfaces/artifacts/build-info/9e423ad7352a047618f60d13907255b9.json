@@ -1,0 +1,4947 @@
+{
+	"id": "9e423ad7352a047618f60d13907255b9",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"src/interfaces/IWormhole.sol": {
+				"content": "// SPDX-License-Identifier: Apache 2\n\npragma solidity ^0.8.0;\n\ninterface IWormhole {\n  struct GuardianSet {\n    address[] keys;\n    uint32 expirationTime;\n  }\n\n  struct Signature {\n    bytes32 r;\n    bytes32 s;\n    uint8 v;\n    uint8 guardianIndex;\n  }\n\n  struct VM {\n    uint8 version;\n    uint32 timestamp;\n    uint32 nonce;\n    uint16 emitterChainId;\n    bytes32 emitterAddress;\n    uint64 sequence;\n    uint8 consistencyLevel;\n    bytes payload;\n    uint32 guardianSetIndex;\n    Signature[] signatures;\n    bytes32 hash;\n  }\n\n  struct ContractUpgrade {\n    bytes32 module;\n    uint8 action;\n    uint16 chain;\n    address newContract;\n  }\n\n  struct GuardianSetUpgrade {\n    bytes32 module;\n    uint8 action;\n    uint16 chain;\n    GuardianSet newGuardianSet;\n    uint32 newGuardianSetIndex;\n  }\n\n  struct SetMessageFee {\n    bytes32 module;\n    uint8 action;\n    uint16 chain;\n    uint256 messageFee;\n  }\n\n  struct TransferFees {\n    bytes32 module;\n    uint8 action;\n    uint16 chain;\n    uint256 amount;\n    bytes32 recipient;\n  }\n\n  struct RecoverChainId {\n    bytes32 module;\n    uint8 action;\n    uint256 evmChainId;\n    uint16 newChainId;\n  }\n\n  event LogMessagePublished(\n    address indexed sender,\n    uint64 sequence,\n    uint32 nonce,\n    bytes payload,\n    uint8 consistencyLevel\n  );\n\n  event ContractUpgraded(address indexed oldContract, address indexed newContract);\n\n  event GuardianSetAdded(uint32 indexed index);\n\n  function publishMessage(uint32 nonce, bytes memory payload, uint8 consistencyLevel)\n    external\n    payable\n    returns (uint64 sequence);\n\n  function initialize() external;\n\n  function parseAndVerifyVM(bytes calldata encodedVM)\n    external\n    view\n    returns (VM memory vm, bool valid, string memory reason);\n\n  function verifyVM(VM memory vm) external view returns (bool valid, string memory reason);\n\n  function verifySignatures(\n    bytes32 hash,\n    Signature[] memory signatures,\n    GuardianSet memory guardianSet\n  ) external pure returns (bool valid, string memory reason);\n\n  function parseVM(bytes memory encodedVM) external pure returns (VM memory vm);\n\n  function quorum(\n    uint256 numGuardians\n  ) external pure returns (uint256 numSignaturesRequiredForQuorum);\n\n  function getGuardianSet(uint32 index) external view returns (GuardianSet memory);\n\n  function getCurrentGuardianSetIndex() external view returns (uint32);\n\n  function getGuardianSetExpiry() external view returns (uint32);\n\n  function governanceActionIsConsumed(bytes32 hash) external view returns (bool);\n\n  function isInitialized(address impl) external view returns (bool);\n\n  function chainId() external view returns (uint16);\n\n  function isFork() external view returns (bool);\n\n  function governanceChainId() external view returns (uint16);\n\n  function governanceContract() external view returns (bytes32);\n\n  function messageFee() external view returns (uint256);\n\n  function evmChainId() external view returns (uint256);\n\n  function nextSequence(address emitter) external view returns (uint64);\n\n  function parseContractUpgrade(\n    bytes memory encodedUpgrade\n  ) external pure returns (ContractUpgrade memory cu);\n\n  function parseGuardianSetUpgrade(\n    bytes memory encodedUpgrade\n  ) external pure returns (GuardianSetUpgrade memory gsu);\n\n  function parseSetMessageFee(\n    bytes memory encodedSetMessageFee\n  ) external pure returns (SetMessageFee memory smf);\n\n  function parseTransferFees(\n    bytes memory encodedTransferFees\n  ) external pure returns (TransferFees memory tf);\n\n  function parseRecoverChainId(\n    bytes memory encodedRecoverChainId\n  ) external pure returns (RecoverChainId memory rci);\n\n  function submitContractUpgrade(bytes memory _vm) external;\n\n  function submitSetMessageFee(bytes memory _vm) external;\n\n  function submitNewGuardianSet(bytes memory _vm) external;\n\n  function submitTransferFees(bytes memory _vm) external;\n\n  function submitRecoverChainId(bytes memory _vm) external;\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"contracts": {
+			"src/interfaces/IWormhole.sol": {
+				"IWormhole": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "oldContract",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "newContract",
+									"type": "address"
+								}
+							],
+							"name": "ContractUpgraded",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "uint32",
+									"name": "index",
+									"type": "uint32"
+								}
+							],
+							"name": "GuardianSetAdded",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "sender",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint64",
+									"name": "sequence",
+									"type": "uint64"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint32",
+									"name": "nonce",
+									"type": "uint32"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "payload",
+									"type": "bytes"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint8",
+									"name": "consistencyLevel",
+									"type": "uint8"
+								}
+							],
+							"name": "LogMessagePublished",
+							"type": "event"
+						},
+						{
+							"inputs": [],
+							"name": "chainId",
+							"outputs": [
+								{
+									"internalType": "uint16",
+									"name": "",
+									"type": "uint16"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "evmChainId",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getCurrentGuardianSetIndex",
+							"outputs": [
+								{
+									"internalType": "uint32",
+									"name": "",
+									"type": "uint32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint32",
+									"name": "index",
+									"type": "uint32"
+								}
+							],
+							"name": "getGuardianSet",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "address[]",
+											"name": "keys",
+											"type": "address[]"
+										},
+										{
+											"internalType": "uint32",
+											"name": "expirationTime",
+											"type": "uint32"
+										}
+									],
+									"internalType": "struct IWormhole.GuardianSet",
+									"name": "",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getGuardianSetExpiry",
+							"outputs": [
+								{
+									"internalType": "uint32",
+									"name": "",
+									"type": "uint32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "hash",
+									"type": "bytes32"
+								}
+							],
+							"name": "governanceActionIsConsumed",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "governanceChainId",
+							"outputs": [
+								{
+									"internalType": "uint16",
+									"name": "",
+									"type": "uint16"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "governanceContract",
+							"outputs": [
+								{
+									"internalType": "bytes32",
+									"name": "",
+									"type": "bytes32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "initialize",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "isFork",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "impl",
+									"type": "address"
+								}
+							],
+							"name": "isInitialized",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "messageFee",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "emitter",
+									"type": "address"
+								}
+							],
+							"name": "nextSequence",
+							"outputs": [
+								{
+									"internalType": "uint64",
+									"name": "",
+									"type": "uint64"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedVM",
+									"type": "bytes"
+								}
+							],
+							"name": "parseAndVerifyVM",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint8",
+											"name": "version",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint32",
+											"name": "timestamp",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint32",
+											"name": "nonce",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint16",
+											"name": "emitterChainId",
+											"type": "uint16"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "emitterAddress",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint64",
+											"name": "sequence",
+											"type": "uint64"
+										},
+										{
+											"internalType": "uint8",
+											"name": "consistencyLevel",
+											"type": "uint8"
+										},
+										{
+											"internalType": "bytes",
+											"name": "payload",
+											"type": "bytes"
+										},
+										{
+											"internalType": "uint32",
+											"name": "guardianSetIndex",
+											"type": "uint32"
+										},
+										{
+											"components": [
+												{
+													"internalType": "bytes32",
+													"name": "r",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "bytes32",
+													"name": "s",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "uint8",
+													"name": "v",
+													"type": "uint8"
+												},
+												{
+													"internalType": "uint8",
+													"name": "guardianIndex",
+													"type": "uint8"
+												}
+											],
+											"internalType": "struct IWormhole.Signature[]",
+											"name": "signatures",
+											"type": "tuple[]"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "hash",
+											"type": "bytes32"
+										}
+									],
+									"internalType": "struct IWormhole.VM",
+									"name": "vm",
+									"type": "tuple"
+								},
+								{
+									"internalType": "bool",
+									"name": "valid",
+									"type": "bool"
+								},
+								{
+									"internalType": "string",
+									"name": "reason",
+									"type": "string"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedUpgrade",
+									"type": "bytes"
+								}
+							],
+							"name": "parseContractUpgrade",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "module",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "action",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint16",
+											"name": "chain",
+											"type": "uint16"
+										},
+										{
+											"internalType": "address",
+											"name": "newContract",
+											"type": "address"
+										}
+									],
+									"internalType": "struct IWormhole.ContractUpgrade",
+									"name": "cu",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedUpgrade",
+									"type": "bytes"
+								}
+							],
+							"name": "parseGuardianSetUpgrade",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "module",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "action",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint16",
+											"name": "chain",
+											"type": "uint16"
+										},
+										{
+											"components": [
+												{
+													"internalType": "address[]",
+													"name": "keys",
+													"type": "address[]"
+												},
+												{
+													"internalType": "uint32",
+													"name": "expirationTime",
+													"type": "uint32"
+												}
+											],
+											"internalType": "struct IWormhole.GuardianSet",
+											"name": "newGuardianSet",
+											"type": "tuple"
+										},
+										{
+											"internalType": "uint32",
+											"name": "newGuardianSetIndex",
+											"type": "uint32"
+										}
+									],
+									"internalType": "struct IWormhole.GuardianSetUpgrade",
+									"name": "gsu",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedRecoverChainId",
+									"type": "bytes"
+								}
+							],
+							"name": "parseRecoverChainId",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "module",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "action",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint256",
+											"name": "evmChainId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint16",
+											"name": "newChainId",
+											"type": "uint16"
+										}
+									],
+									"internalType": "struct IWormhole.RecoverChainId",
+									"name": "rci",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedSetMessageFee",
+									"type": "bytes"
+								}
+							],
+							"name": "parseSetMessageFee",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "module",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "action",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint16",
+											"name": "chain",
+											"type": "uint16"
+										},
+										{
+											"internalType": "uint256",
+											"name": "messageFee",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct IWormhole.SetMessageFee",
+									"name": "smf",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedTransferFees",
+									"type": "bytes"
+								}
+							],
+							"name": "parseTransferFees",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "module",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "action",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint16",
+											"name": "chain",
+											"type": "uint16"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "recipient",
+											"type": "bytes32"
+										}
+									],
+									"internalType": "struct IWormhole.TransferFees",
+									"name": "tf",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "encodedVM",
+									"type": "bytes"
+								}
+							],
+							"name": "parseVM",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint8",
+											"name": "version",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint32",
+											"name": "timestamp",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint32",
+											"name": "nonce",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint16",
+											"name": "emitterChainId",
+											"type": "uint16"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "emitterAddress",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint64",
+											"name": "sequence",
+											"type": "uint64"
+										},
+										{
+											"internalType": "uint8",
+											"name": "consistencyLevel",
+											"type": "uint8"
+										},
+										{
+											"internalType": "bytes",
+											"name": "payload",
+											"type": "bytes"
+										},
+										{
+											"internalType": "uint32",
+											"name": "guardianSetIndex",
+											"type": "uint32"
+										},
+										{
+											"components": [
+												{
+													"internalType": "bytes32",
+													"name": "r",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "bytes32",
+													"name": "s",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "uint8",
+													"name": "v",
+													"type": "uint8"
+												},
+												{
+													"internalType": "uint8",
+													"name": "guardianIndex",
+													"type": "uint8"
+												}
+											],
+											"internalType": "struct IWormhole.Signature[]",
+											"name": "signatures",
+											"type": "tuple[]"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "hash",
+											"type": "bytes32"
+										}
+									],
+									"internalType": "struct IWormhole.VM",
+									"name": "vm",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint32",
+									"name": "nonce",
+									"type": "uint32"
+								},
+								{
+									"internalType": "bytes",
+									"name": "payload",
+									"type": "bytes"
+								},
+								{
+									"internalType": "uint8",
+									"name": "consistencyLevel",
+									"type": "uint8"
+								}
+							],
+							"name": "publishMessage",
+							"outputs": [
+								{
+									"internalType": "uint64",
+									"name": "sequence",
+									"type": "uint64"
+								}
+							],
+							"stateMutability": "payable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "numGuardians",
+									"type": "uint256"
+								}
+							],
+							"name": "quorum",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "numSignaturesRequiredForQuorum",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "_vm",
+									"type": "bytes"
+								}
+							],
+							"name": "submitContractUpgrade",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "_vm",
+									"type": "bytes"
+								}
+							],
+							"name": "submitNewGuardianSet",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "_vm",
+									"type": "bytes"
+								}
+							],
+							"name": "submitRecoverChainId",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "_vm",
+									"type": "bytes"
+								}
+							],
+							"name": "submitSetMessageFee",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "_vm",
+									"type": "bytes"
+								}
+							],
+							"name": "submitTransferFees",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "hash",
+									"type": "bytes32"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "r",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "s",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint8",
+											"name": "v",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint8",
+											"name": "guardianIndex",
+											"type": "uint8"
+										}
+									],
+									"internalType": "struct IWormhole.Signature[]",
+									"name": "signatures",
+									"type": "tuple[]"
+								},
+								{
+									"components": [
+										{
+											"internalType": "address[]",
+											"name": "keys",
+											"type": "address[]"
+										},
+										{
+											"internalType": "uint32",
+											"name": "expirationTime",
+											"type": "uint32"
+										}
+									],
+									"internalType": "struct IWormhole.GuardianSet",
+									"name": "guardianSet",
+									"type": "tuple"
+								}
+							],
+							"name": "verifySignatures",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "valid",
+									"type": "bool"
+								},
+								{
+									"internalType": "string",
+									"name": "reason",
+									"type": "string"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint8",
+											"name": "version",
+											"type": "uint8"
+										},
+										{
+											"internalType": "uint32",
+											"name": "timestamp",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint32",
+											"name": "nonce",
+											"type": "uint32"
+										},
+										{
+											"internalType": "uint16",
+											"name": "emitterChainId",
+											"type": "uint16"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "emitterAddress",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint64",
+											"name": "sequence",
+											"type": "uint64"
+										},
+										{
+											"internalType": "uint8",
+											"name": "consistencyLevel",
+											"type": "uint8"
+										},
+										{
+											"internalType": "bytes",
+											"name": "payload",
+											"type": "bytes"
+										},
+										{
+											"internalType": "uint32",
+											"name": "guardianSetIndex",
+											"type": "uint32"
+										},
+										{
+											"components": [
+												{
+													"internalType": "bytes32",
+													"name": "r",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "bytes32",
+													"name": "s",
+													"type": "bytes32"
+												},
+												{
+													"internalType": "uint8",
+													"name": "v",
+													"type": "uint8"
+												},
+												{
+													"internalType": "uint8",
+													"name": "guardianIndex",
+													"type": "uint8"
+												}
+											],
+											"internalType": "struct IWormhole.Signature[]",
+											"name": "signatures",
+											"type": "tuple[]"
+										},
+										{
+											"internalType": "bytes32",
+											"name": "hash",
+											"type": "bytes32"
+										}
+									],
+									"internalType": "struct IWormhole.VM",
+									"name": "vm",
+									"type": "tuple"
+								}
+							],
+							"name": "verifyVM",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "valid",
+									"type": "bool"
+								},
+								{
+									"internalType": "string",
+									"name": "reason",
+									"type": "string"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"chainId()": "9a8a0592",
+							"evmChainId()": "64d42b17",
+							"getCurrentGuardianSetIndex()": "1cfe7951",
+							"getGuardianSet(uint32)": "f951975a",
+							"getGuardianSetExpiry()": "eb8d3f12",
+							"governanceActionIsConsumed(bytes32)": "2c3c02a4",
+							"governanceChainId()": "fbe3c2cd",
+							"governanceContract()": "b172b222",
+							"initialize()": "8129fc1c",
+							"isFork()": "e039f224",
+							"isInitialized(address)": "d60b347f",
+							"messageFee()": "1a90a219",
+							"nextSequence(address)": "4cf842b5",
+							"parseAndVerifyVM(bytes)": "c0fd8bde",
+							"parseContractUpgrade(bytes)": "4fdc60fa",
+							"parseGuardianSetUpgrade(bytes)": "04ca84cf",
+							"parseRecoverChainId(bytes)": "cb4cfea8",
+							"parseSetMessageFee(bytes)": "515f3247",
+							"parseTransferFees(bytes)": "0319e59c",
+							"parseVM(bytes)": "a9e11893",
+							"publishMessage(uint32,bytes,uint8)": "b19a437e",
+							"quorum(uint256)": "f8ce560a",
+							"submitContractUpgrade(bytes)": "5cb8cae2",
+							"submitNewGuardianSet(bytes)": "6606b4e0",
+							"submitRecoverChainId(bytes)": "178149e7",
+							"submitSetMessageFee(bytes)": "f42bc641",
+							"submitTransferFees(bytes)": "93df337e",
+							"verifySignatures(bytes32,(bytes32,bytes32,uint8,uint8)[],(address[],uint32))": "a0cce1b3",
+							"verifyVM((uint8,uint32,uint32,uint16,bytes32,uint64,uint8,bytes,uint32,(bytes32,bytes32,uint8,uint8)[],bytes32))": "875be02a"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newContract\",\"type\":\"address\"}],\"name\":\"ContractUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"index\",\"type\":\"uint32\"}],\"name\":\"GuardianSetAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"consistencyLevel\",\"type\":\"uint8\"}],\"name\":\"LogMessagePublished\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"chainId\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"evmChainId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCurrentGuardianSetIndex\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"index\",\"type\":\"uint32\"}],\"name\":\"getGuardianSet\",\"outputs\":[{\"components\":[{\"internalType\":\"address[]\",\"name\":\"keys\",\"type\":\"address[]\"},{\"internalType\":\"uint32\",\"name\":\"expirationTime\",\"type\":\"uint32\"}],\"internalType\":\"struct IWormhole.GuardianSet\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getGuardianSetExpiry\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"governanceActionIsConsumed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceChainId\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceContract\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isFork\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"name\":\"isInitialized\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"messageFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"emitter\",\"type\":\"address\"}],\"name\":\"nextSequence\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedVM\",\"type\":\"bytes\"}],\"name\":\"parseAndVerifyVM\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"timestamp\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"uint16\",\"name\":\"emitterChainId\",\"type\":\"uint16\"},{\"internalType\":\"bytes32\",\"name\":\"emitterAddress\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"consistencyLevel\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"guardianSetIndex\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"guardianIndex\",\"type\":\"uint8\"}],\"internalType\":\"struct IWormhole.Signature[]\",\"name\":\"signatures\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"internalType\":\"struct IWormhole.VM\",\"name\":\"vm\",\"type\":\"tuple\"},{\"internalType\":\"bool\",\"name\":\"valid\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedUpgrade\",\"type\":\"bytes\"}],\"name\":\"parseContractUpgrade\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"module\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"uint16\",\"name\":\"chain\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"newContract\",\"type\":\"address\"}],\"internalType\":\"struct IWormhole.ContractUpgrade\",\"name\":\"cu\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedUpgrade\",\"type\":\"bytes\"}],\"name\":\"parseGuardianSetUpgrade\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"module\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"uint16\",\"name\":\"chain\",\"type\":\"uint16\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"keys\",\"type\":\"address[]\"},{\"internalType\":\"uint32\",\"name\":\"expirationTime\",\"type\":\"uint32\"}],\"internalType\":\"struct IWormhole.GuardianSet\",\"name\":\"newGuardianSet\",\"type\":\"tuple\"},{\"internalType\":\"uint32\",\"name\":\"newGuardianSetIndex\",\"type\":\"uint32\"}],\"internalType\":\"struct IWormhole.GuardianSetUpgrade\",\"name\":\"gsu\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedRecoverChainId\",\"type\":\"bytes\"}],\"name\":\"parseRecoverChainId\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"module\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"evmChainId\",\"type\":\"uint256\"},{\"internalType\":\"uint16\",\"name\":\"newChainId\",\"type\":\"uint16\"}],\"internalType\":\"struct IWormhole.RecoverChainId\",\"name\":\"rci\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedSetMessageFee\",\"type\":\"bytes\"}],\"name\":\"parseSetMessageFee\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"module\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"uint16\",\"name\":\"chain\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"messageFee\",\"type\":\"uint256\"}],\"internalType\":\"struct IWormhole.SetMessageFee\",\"name\":\"smf\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedTransferFees\",\"type\":\"bytes\"}],\"name\":\"parseTransferFees\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"module\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"uint16\",\"name\":\"chain\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"recipient\",\"type\":\"bytes32\"}],\"internalType\":\"struct IWormhole.TransferFees\",\"name\":\"tf\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"encodedVM\",\"type\":\"bytes\"}],\"name\":\"parseVM\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"timestamp\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"uint16\",\"name\":\"emitterChainId\",\"type\":\"uint16\"},{\"internalType\":\"bytes32\",\"name\":\"emitterAddress\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"consistencyLevel\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"guardianSetIndex\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"guardianIndex\",\"type\":\"uint8\"}],\"internalType\":\"struct IWormhole.Signature[]\",\"name\":\"signatures\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"internalType\":\"struct IWormhole.VM\",\"name\":\"vm\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"uint8\",\"name\":\"consistencyLevel\",\"type\":\"uint8\"}],\"name\":\"publishMessage\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"numGuardians\",\"type\":\"uint256\"}],\"name\":\"quorum\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"numSignaturesRequiredForQuorum\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_vm\",\"type\":\"bytes\"}],\"name\":\"submitContractUpgrade\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_vm\",\"type\":\"bytes\"}],\"name\":\"submitNewGuardianSet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_vm\",\"type\":\"bytes\"}],\"name\":\"submitRecoverChainId\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_vm\",\"type\":\"bytes\"}],\"name\":\"submitSetMessageFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_vm\",\"type\":\"bytes\"}],\"name\":\"submitTransferFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"guardianIndex\",\"type\":\"uint8\"}],\"internalType\":\"struct IWormhole.Signature[]\",\"name\":\"signatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"keys\",\"type\":\"address[]\"},{\"internalType\":\"uint32\",\"name\":\"expirationTime\",\"type\":\"uint32\"}],\"internalType\":\"struct IWormhole.GuardianSet\",\"name\":\"guardianSet\",\"type\":\"tuple\"}],\"name\":\"verifySignatures\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"valid\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"timestamp\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"uint16\",\"name\":\"emitterChainId\",\"type\":\"uint16\"},{\"internalType\":\"bytes32\",\"name\":\"emitterAddress\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"consistencyLevel\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"guardianSetIndex\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"guardianIndex\",\"type\":\"uint8\"}],\"internalType\":\"struct IWormhole.Signature[]\",\"name\":\"signatures\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"internalType\":\"struct IWormhole.VM\",\"name\":\"vm\",\"type\":\"tuple\"}],\"name\":\"verifyVM\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"valid\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/interfaces/IWormhole.sol\":\"IWormhole\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"src/interfaces/IWormhole.sol\":{\"keccak256\":\"0xb8dafb6b01a693ea79536abc1ca055aff2f72e918329403ac261e6429db12206\",\"license\":\"Apache 2\",\"urls\":[\"bzz-raw://c52009a321ee86ce2a222f7ebd560a93210d7990525053895af5353323a77099\",\"dweb:/ipfs/QmT3gE2nKsYiSuUg2EeiHoHN6BRWks549Yjej1qdvipjCT\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"src/interfaces/IWormhole.sol": {
+				"ast": {
+					"absolutePath": "src/interfaces/IWormhole.sol",
+					"exportedSymbols": {
+						"IWormhole": [
+							315
+						]
+					},
+					"id": 316,
+					"license": "Apache 2",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".0"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "38:23:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IWormhole",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 315,
+							"linearizedBaseContracts": [
+								315
+							],
+							"name": "IWormhole",
+							"nameLocation": "73:9:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"canonicalName": "IWormhole.GuardianSet",
+									"id": 7,
+									"members": [
+										{
+											"constant": false,
+											"id": 4,
+											"mutability": "mutable",
+											"name": "keys",
+											"nameLocation": "122:4:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 7,
+											"src": "112:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+												"typeString": "address[]"
+											},
+											"typeName": {
+												"baseType": {
+													"id": 2,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "112:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"id": 3,
+												"nodeType": "ArrayTypeName",
+												"src": "112:9:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+													"typeString": "address[]"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 6,
+											"mutability": "mutable",
+											"name": "expirationTime",
+											"nameLocation": "139:14:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 7,
+											"src": "132:21:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint32",
+												"typeString": "uint32"
+											},
+											"typeName": {
+												"id": 5,
+												"name": "uint32",
+												"nodeType": "ElementaryTypeName",
+												"src": "132:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "GuardianSet",
+									"nameLocation": "94:11:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "87:71:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.Signature",
+									"id": 16,
+									"members": [
+										{
+											"constant": false,
+											"id": 9,
+											"mutability": "mutable",
+											"name": "r",
+											"nameLocation": "193:1:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 16,
+											"src": "185:9:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 8,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "185:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 11,
+											"mutability": "mutable",
+											"name": "s",
+											"nameLocation": "208:1:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 16,
+											"src": "200:9:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 10,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "200:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 13,
+											"mutability": "mutable",
+											"name": "v",
+											"nameLocation": "221:1:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 16,
+											"src": "215:7:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 12,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "215:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 15,
+											"mutability": "mutable",
+											"name": "guardianIndex",
+											"nameLocation": "234:13:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 16,
+											"src": "228:19:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 14,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "228:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "Signature",
+									"nameLocation": "169:9:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "162:90:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.VM",
+									"id": 41,
+									"members": [
+										{
+											"constant": false,
+											"id": 18,
+											"mutability": "mutable",
+											"name": "version",
+											"nameLocation": "278:7:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "272:13:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 17,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "272:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 20,
+											"mutability": "mutable",
+											"name": "timestamp",
+											"nameLocation": "298:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "291:16:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint32",
+												"typeString": "uint32"
+											},
+											"typeName": {
+												"id": 19,
+												"name": "uint32",
+												"nodeType": "ElementaryTypeName",
+												"src": "291:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 22,
+											"mutability": "mutable",
+											"name": "nonce",
+											"nameLocation": "320:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "313:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint32",
+												"typeString": "uint32"
+											},
+											"typeName": {
+												"id": 21,
+												"name": "uint32",
+												"nodeType": "ElementaryTypeName",
+												"src": "313:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 24,
+											"mutability": "mutable",
+											"name": "emitterChainId",
+											"nameLocation": "338:14:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "331:21:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 23,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "331:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 26,
+											"mutability": "mutable",
+											"name": "emitterAddress",
+											"nameLocation": "366:14:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "358:22:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 25,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "358:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 28,
+											"mutability": "mutable",
+											"name": "sequence",
+											"nameLocation": "393:8:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "386:15:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint64",
+												"typeString": "uint64"
+											},
+											"typeName": {
+												"id": 27,
+												"name": "uint64",
+												"nodeType": "ElementaryTypeName",
+												"src": "386:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 30,
+											"mutability": "mutable",
+											"name": "consistencyLevel",
+											"nameLocation": "413:16:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "407:22:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 29,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "407:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 32,
+											"mutability": "mutable",
+											"name": "payload",
+											"nameLocation": "441:7:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "435:13:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 31,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "435:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 34,
+											"mutability": "mutable",
+											"name": "guardianSetIndex",
+											"nameLocation": "461:16:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "454:23:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint32",
+												"typeString": "uint32"
+											},
+											"typeName": {
+												"id": 33,
+												"name": "uint32",
+												"nodeType": "ElementaryTypeName",
+												"src": "454:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 38,
+											"mutability": "mutable",
+											"name": "signatures",
+											"nameLocation": "495:10:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "483:22:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_array$_t_struct$_Signature_$16_storage_$dyn_storage_ptr",
+												"typeString": "struct IWormhole.Signature[]"
+											},
+											"typeName": {
+												"baseType": {
+													"id": 36,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 35,
+														"name": "Signature",
+														"nameLocations": [
+															"483:9:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 16,
+														"src": "483:9:0"
+													},
+													"referencedDeclaration": 16,
+													"src": "483:9:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_Signature_$16_storage_ptr",
+														"typeString": "struct IWormhole.Signature"
+													}
+												},
+												"id": 37,
+												"nodeType": "ArrayTypeName",
+												"src": "483:11:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_Signature_$16_storage_$dyn_storage_ptr",
+													"typeString": "struct IWormhole.Signature[]"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 40,
+											"mutability": "mutable",
+											"name": "hash",
+											"nameLocation": "519:4:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 41,
+											"src": "511:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 39,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "511:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "VM",
+									"nameLocation": "263:2:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "256:272:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.ContractUpgrade",
+									"id": 50,
+									"members": [
+										{
+											"constant": false,
+											"id": 43,
+											"mutability": "mutable",
+											"name": "module",
+											"nameLocation": "569:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 50,
+											"src": "561:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 42,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "561:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 45,
+											"mutability": "mutable",
+											"name": "action",
+											"nameLocation": "587:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 50,
+											"src": "581:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 44,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "581:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 47,
+											"mutability": "mutable",
+											"name": "chain",
+											"nameLocation": "606:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 50,
+											"src": "599:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 46,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "599:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 49,
+											"mutability": "mutable",
+											"name": "newContract",
+											"nameLocation": "625:11:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 50,
+											"src": "617:19:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_address",
+												"typeString": "address"
+											},
+											"typeName": {
+												"id": 48,
+												"name": "address",
+												"nodeType": "ElementaryTypeName",
+												"src": "617:7:0",
+												"stateMutability": "nonpayable",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "ContractUpgrade",
+									"nameLocation": "539:15:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "532:109:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.GuardianSetUpgrade",
+									"id": 62,
+									"members": [
+										{
+											"constant": false,
+											"id": 52,
+											"mutability": "mutable",
+											"name": "module",
+											"nameLocation": "685:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 62,
+											"src": "677:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 51,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "677:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 54,
+											"mutability": "mutable",
+											"name": "action",
+											"nameLocation": "703:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 62,
+											"src": "697:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 53,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "697:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 56,
+											"mutability": "mutable",
+											"name": "chain",
+											"nameLocation": "722:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 62,
+											"src": "715:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 55,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "715:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 59,
+											"mutability": "mutable",
+											"name": "newGuardianSet",
+											"nameLocation": "745:14:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 62,
+											"src": "733:26:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_struct$_GuardianSet_$7_storage_ptr",
+												"typeString": "struct IWormhole.GuardianSet"
+											},
+											"typeName": {
+												"id": 58,
+												"nodeType": "UserDefinedTypeName",
+												"pathNode": {
+													"id": 57,
+													"name": "GuardianSet",
+													"nameLocations": [
+														"733:11:0"
+													],
+													"nodeType": "IdentifierPath",
+													"referencedDeclaration": 7,
+													"src": "733:11:0"
+												},
+												"referencedDeclaration": 7,
+												"src": "733:11:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_GuardianSet_$7_storage_ptr",
+													"typeString": "struct IWormhole.GuardianSet"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 61,
+											"mutability": "mutable",
+											"name": "newGuardianSetIndex",
+											"nameLocation": "772:19:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 62,
+											"src": "765:26:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint32",
+												"typeString": "uint32"
+											},
+											"typeName": {
+												"id": 60,
+												"name": "uint32",
+												"nodeType": "ElementaryTypeName",
+												"src": "765:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "GuardianSetUpgrade",
+									"nameLocation": "652:18:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "645:151:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.SetMessageFee",
+									"id": 71,
+									"members": [
+										{
+											"constant": false,
+											"id": 64,
+											"mutability": "mutable",
+											"name": "module",
+											"nameLocation": "835:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 71,
+											"src": "827:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 63,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "827:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 66,
+											"mutability": "mutable",
+											"name": "action",
+											"nameLocation": "853:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 71,
+											"src": "847:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 65,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "847:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 68,
+											"mutability": "mutable",
+											"name": "chain",
+											"nameLocation": "872:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 71,
+											"src": "865:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 67,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "865:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 70,
+											"mutability": "mutable",
+											"name": "messageFee",
+											"nameLocation": "891:10:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 71,
+											"src": "883:18:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 69,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "883:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "SetMessageFee",
+									"nameLocation": "807:13:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "800:106:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.TransferFees",
+									"id": 82,
+									"members": [
+										{
+											"constant": false,
+											"id": 73,
+											"mutability": "mutable",
+											"name": "module",
+											"nameLocation": "944:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 82,
+											"src": "936:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 72,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "936:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 75,
+											"mutability": "mutable",
+											"name": "action",
+											"nameLocation": "962:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 82,
+											"src": "956:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 74,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "956:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 77,
+											"mutability": "mutable",
+											"name": "chain",
+											"nameLocation": "981:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 82,
+											"src": "974:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 76,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "974:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 79,
+											"mutability": "mutable",
+											"name": "amount",
+											"nameLocation": "1000:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 82,
+											"src": "992:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 78,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "992:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 81,
+											"mutability": "mutable",
+											"name": "recipient",
+											"nameLocation": "1020:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 82,
+											"src": "1012:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 80,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "1012:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "TransferFees",
+									"nameLocation": "917:12:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "910:124:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IWormhole.RecoverChainId",
+									"id": 91,
+									"members": [
+										{
+											"constant": false,
+											"id": 84,
+											"mutability": "mutable",
+											"name": "module",
+											"nameLocation": "1074:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 91,
+											"src": "1066:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 83,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "1066:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 86,
+											"mutability": "mutable",
+											"name": "action",
+											"nameLocation": "1092:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 91,
+											"src": "1086:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint8",
+												"typeString": "uint8"
+											},
+											"typeName": {
+												"id": 85,
+												"name": "uint8",
+												"nodeType": "ElementaryTypeName",
+												"src": "1086:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 88,
+											"mutability": "mutable",
+											"name": "evmChainId",
+											"nameLocation": "1112:10:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 91,
+											"src": "1104:18:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 87,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1104:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 90,
+											"mutability": "mutable",
+											"name": "newChainId",
+											"nameLocation": "1135:10:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 91,
+											"src": "1128:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint16",
+												"typeString": "uint16"
+											},
+											"typeName": {
+												"id": 89,
+												"name": "uint16",
+												"nodeType": "ElementaryTypeName",
+												"src": "1128:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "RecoverChainId",
+									"nameLocation": "1045:14:0",
+									"nodeType": "StructDefinition",
+									"scope": 315,
+									"src": "1038:112:0",
+									"visibility": "public"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "6eb224fb001ed210e379b335e35efe88672a8ce935d981a6896b27ffdf52a3b2",
+									"id": 103,
+									"name": "LogMessagePublished",
+									"nameLocation": "1160:19:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 102,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 93,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "sender",
+												"nameLocation": "1201:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 103,
+												"src": "1185:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 92,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1185:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 95,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "sequence",
+												"nameLocation": "1220:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 103,
+												"src": "1213:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												},
+												"typeName": {
+													"id": 94,
+													"name": "uint64",
+													"nodeType": "ElementaryTypeName",
+													"src": "1213:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint64",
+														"typeString": "uint64"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 97,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "nonce",
+												"nameLocation": "1241:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 103,
+												"src": "1234:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 96,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "1234:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 99,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "payload",
+												"nameLocation": "1258:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 103,
+												"src": "1252:13:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 98,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "1252:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 101,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "consistencyLevel",
+												"nameLocation": "1277:16:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 103,
+												"src": "1271:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												},
+												"typeName": {
+													"id": 100,
+													"name": "uint8",
+													"nodeType": "ElementaryTypeName",
+													"src": "1271:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint8",
+														"typeString": "uint8"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1179:118:0"
+									},
+									"src": "1154:144:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "2e4cc16c100f0b55e2df82ab0b1a7e294aa9cbd01b48fbaf622683fbc0507a49",
+									"id": 109,
+									"name": "ContractUpgraded",
+									"nameLocation": "1308:16:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 108,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 105,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "oldContract",
+												"nameLocation": "1341:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 109,
+												"src": "1325:27:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 104,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1325:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 107,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "newContract",
+												"nameLocation": "1370:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 109,
+												"src": "1354:27:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 106,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1354:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1324:58:0"
+									},
+									"src": "1302:81:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "2384dbc52f7b617fb7c5aa71e5455a21ff21d58604bb6daef6af2bb44aadebdd",
+									"id": 113,
+									"name": "GuardianSetAdded",
+									"nameLocation": "1393:16:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 112,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 111,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "index",
+												"nameLocation": "1425:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 113,
+												"src": "1410:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 110,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "1410:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1409:22:0"
+									},
+									"src": "1387:45:0"
+								},
+								{
+									"functionSelector": "b19a437e",
+									"id": 124,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "publishMessage",
+									"nameLocation": "1445:14:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 120,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 115,
+												"mutability": "mutable",
+												"name": "nonce",
+												"nameLocation": "1467:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 124,
+												"src": "1460:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 114,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "1460:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 117,
+												"mutability": "mutable",
+												"name": "payload",
+												"nameLocation": "1487:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 124,
+												"src": "1474:20:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 116,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "1474:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 119,
+												"mutability": "mutable",
+												"name": "consistencyLevel",
+												"nameLocation": "1502:16:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 124,
+												"src": "1496:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												},
+												"typeName": {
+													"id": 118,
+													"name": "uint8",
+													"nodeType": "ElementaryTypeName",
+													"src": "1496:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint8",
+														"typeString": "uint8"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1459:60:0"
+									},
+									"returnParameters": {
+										"id": 123,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 122,
+												"mutability": "mutable",
+												"name": "sequence",
+												"nameLocation": "1565:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 124,
+												"src": "1558:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												},
+												"typeName": {
+													"id": 121,
+													"name": "uint64",
+													"nodeType": "ElementaryTypeName",
+													"src": "1558:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint64",
+														"typeString": "uint64"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1557:17:0"
+									},
+									"scope": 315,
+									"src": "1436:139:0",
+									"stateMutability": "payable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "8129fc1c",
+									"id": 127,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "initialize",
+									"nameLocation": "1588:10:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 125,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1598:2:0"
+									},
+									"returnParameters": {
+										"id": 126,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1609:0:0"
+									},
+									"scope": 315,
+									"src": "1579:31:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "c0fd8bde",
+									"id": 139,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseAndVerifyVM",
+									"nameLocation": "1623:16:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 130,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 129,
+												"mutability": "mutable",
+												"name": "encodedVM",
+												"nameLocation": "1655:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 139,
+												"src": "1640:24:0",
+												"stateVariable": false,
+												"storageLocation": "calldata",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_calldata_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 128,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "1640:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1639:26:0"
+									},
+									"returnParameters": {
+										"id": 138,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 133,
+												"mutability": "mutable",
+												"name": "vm",
+												"nameLocation": "1711:2:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 139,
+												"src": "1701:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_VM_$41_memory_ptr",
+													"typeString": "struct IWormhole.VM"
+												},
+												"typeName": {
+													"id": 132,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 131,
+														"name": "VM",
+														"nameLocations": [
+															"1701:2:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 41,
+														"src": "1701:2:0"
+													},
+													"referencedDeclaration": 41,
+													"src": "1701:2:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_VM_$41_storage_ptr",
+														"typeString": "struct IWormhole.VM"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 135,
+												"mutability": "mutable",
+												"name": "valid",
+												"nameLocation": "1720:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 139,
+												"src": "1715:10:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 134,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "1715:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 137,
+												"mutability": "mutable",
+												"name": "reason",
+												"nameLocation": "1741:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 139,
+												"src": "1727:20:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_string_memory_ptr",
+													"typeString": "string"
+												},
+												"typeName": {
+													"id": 136,
+													"name": "string",
+													"nodeType": "ElementaryTypeName",
+													"src": "1727:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_string_storage_ptr",
+														"typeString": "string"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1700:48:0"
+									},
+									"scope": 315,
+									"src": "1614:135:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "875be02a",
+									"id": 149,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "verifyVM",
+									"nameLocation": "1762:8:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 143,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 142,
+												"mutability": "mutable",
+												"name": "vm",
+												"nameLocation": "1781:2:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 149,
+												"src": "1771:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_VM_$41_memory_ptr",
+													"typeString": "struct IWormhole.VM"
+												},
+												"typeName": {
+													"id": 141,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 140,
+														"name": "VM",
+														"nameLocations": [
+															"1771:2:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 41,
+														"src": "1771:2:0"
+													},
+													"referencedDeclaration": 41,
+													"src": "1771:2:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_VM_$41_storage_ptr",
+														"typeString": "struct IWormhole.VM"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1770:14:0"
+									},
+									"returnParameters": {
+										"id": 148,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 145,
+												"mutability": "mutable",
+												"name": "valid",
+												"nameLocation": "1813:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 149,
+												"src": "1808:10:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 144,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "1808:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 147,
+												"mutability": "mutable",
+												"name": "reason",
+												"nameLocation": "1834:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 149,
+												"src": "1820:20:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_string_memory_ptr",
+													"typeString": "string"
+												},
+												"typeName": {
+													"id": 146,
+													"name": "string",
+													"nodeType": "ElementaryTypeName",
+													"src": "1820:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_string_storage_ptr",
+														"typeString": "string"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1807:34:0"
+									},
+									"scope": 315,
+									"src": "1753:89:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "a0cce1b3",
+									"id": 165,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "verifySignatures",
+									"nameLocation": "1855:16:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 159,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 151,
+												"mutability": "mutable",
+												"name": "hash",
+												"nameLocation": "1885:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 165,
+												"src": "1877:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 150,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "1877:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 155,
+												"mutability": "mutable",
+												"name": "signatures",
+												"nameLocation": "1914:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 165,
+												"src": "1895:29:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_Signature_$16_memory_ptr_$dyn_memory_ptr",
+													"typeString": "struct IWormhole.Signature[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 153,
+														"nodeType": "UserDefinedTypeName",
+														"pathNode": {
+															"id": 152,
+															"name": "Signature",
+															"nameLocations": [
+																"1895:9:0"
+															],
+															"nodeType": "IdentifierPath",
+															"referencedDeclaration": 16,
+															"src": "1895:9:0"
+														},
+														"referencedDeclaration": 16,
+														"src": "1895:9:0",
+														"typeDescriptions": {
+															"typeIdentifier": "t_struct$_Signature_$16_storage_ptr",
+															"typeString": "struct IWormhole.Signature"
+														}
+													},
+													"id": 154,
+													"nodeType": "ArrayTypeName",
+													"src": "1895:11:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_struct$_Signature_$16_storage_$dyn_storage_ptr",
+														"typeString": "struct IWormhole.Signature[]"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 158,
+												"mutability": "mutable",
+												"name": "guardianSet",
+												"nameLocation": "1949:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 165,
+												"src": "1930:30:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_GuardianSet_$7_memory_ptr",
+													"typeString": "struct IWormhole.GuardianSet"
+												},
+												"typeName": {
+													"id": 157,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 156,
+														"name": "GuardianSet",
+														"nameLocations": [
+															"1930:11:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 7,
+														"src": "1930:11:0"
+													},
+													"referencedDeclaration": 7,
+													"src": "1930:11:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_GuardianSet_$7_storage_ptr",
+														"typeString": "struct IWormhole.GuardianSet"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1871:93:0"
+									},
+									"returnParameters": {
+										"id": 164,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 161,
+												"mutability": "mutable",
+												"name": "valid",
+												"nameLocation": "1993:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 165,
+												"src": "1988:10:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 160,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "1988:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 163,
+												"mutability": "mutable",
+												"name": "reason",
+												"nameLocation": "2014:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 165,
+												"src": "2000:20:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_string_memory_ptr",
+													"typeString": "string"
+												},
+												"typeName": {
+													"id": 162,
+													"name": "string",
+													"nodeType": "ElementaryTypeName",
+													"src": "2000:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_string_storage_ptr",
+														"typeString": "string"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1987:34:0"
+									},
+									"scope": 315,
+									"src": "1846:176:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "a9e11893",
+									"id": 173,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseVM",
+									"nameLocation": "2035:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 168,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 167,
+												"mutability": "mutable",
+												"name": "encodedVM",
+												"nameLocation": "2056:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 173,
+												"src": "2043:22:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 166,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "2043:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2042:24:0"
+									},
+									"returnParameters": {
+										"id": 172,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 171,
+												"mutability": "mutable",
+												"name": "vm",
+												"nameLocation": "2100:2:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 173,
+												"src": "2090:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_VM_$41_memory_ptr",
+													"typeString": "struct IWormhole.VM"
+												},
+												"typeName": {
+													"id": 170,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 169,
+														"name": "VM",
+														"nameLocations": [
+															"2090:2:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 41,
+														"src": "2090:2:0"
+													},
+													"referencedDeclaration": 41,
+													"src": "2090:2:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_VM_$41_storage_ptr",
+														"typeString": "struct IWormhole.VM"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2089:14:0"
+									},
+									"scope": 315,
+									"src": "2026:78:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "f8ce560a",
+									"id": 180,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "quorum",
+									"nameLocation": "2117:6:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 176,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 175,
+												"mutability": "mutable",
+												"name": "numGuardians",
+												"nameLocation": "2137:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 180,
+												"src": "2129:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 174,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2129:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2123:30:0"
+									},
+									"returnParameters": {
+										"id": 179,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 178,
+												"mutability": "mutable",
+												"name": "numSignaturesRequiredForQuorum",
+												"nameLocation": "2185:30:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 180,
+												"src": "2177:38:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 177,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2177:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2176:40:0"
+									},
+									"scope": 315,
+									"src": "2108:109:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "f951975a",
+									"id": 188,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getGuardianSet",
+									"nameLocation": "2230:14:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 183,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 182,
+												"mutability": "mutable",
+												"name": "index",
+												"nameLocation": "2252:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 188,
+												"src": "2245:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 181,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "2245:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2244:14:0"
+									},
+									"returnParameters": {
+										"id": 187,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 186,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 188,
+												"src": "2282:18:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_GuardianSet_$7_memory_ptr",
+													"typeString": "struct IWormhole.GuardianSet"
+												},
+												"typeName": {
+													"id": 185,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 184,
+														"name": "GuardianSet",
+														"nameLocations": [
+															"2282:11:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 7,
+														"src": "2282:11:0"
+													},
+													"referencedDeclaration": 7,
+													"src": "2282:11:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_GuardianSet_$7_storage_ptr",
+														"typeString": "struct IWormhole.GuardianSet"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2281:20:0"
+									},
+									"scope": 315,
+									"src": "2221:81:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "1cfe7951",
+									"id": 193,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getCurrentGuardianSetIndex",
+									"nameLocation": "2315:26:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 189,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2341:2:0"
+									},
+									"returnParameters": {
+										"id": 192,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 191,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 193,
+												"src": "2367:6:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 190,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "2367:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2366:8:0"
+									},
+									"scope": 315,
+									"src": "2306:69:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "eb8d3f12",
+									"id": 198,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getGuardianSetExpiry",
+									"nameLocation": "2388:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 194,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2408:2:0"
+									},
+									"returnParameters": {
+										"id": 197,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 196,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 198,
+												"src": "2434:6:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 195,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "2434:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2433:8:0"
+									},
+									"scope": 315,
+									"src": "2379:63:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "2c3c02a4",
+									"id": 205,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "governanceActionIsConsumed",
+									"nameLocation": "2455:26:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 201,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 200,
+												"mutability": "mutable",
+												"name": "hash",
+												"nameLocation": "2490:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 205,
+												"src": "2482:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 199,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "2482:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2481:14:0"
+									},
+									"returnParameters": {
+										"id": 204,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 203,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 205,
+												"src": "2519:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 202,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "2519:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2518:6:0"
+									},
+									"scope": 315,
+									"src": "2446:79:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "d60b347f",
+									"id": 212,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "isInitialized",
+									"nameLocation": "2538:13:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 208,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 207,
+												"mutability": "mutable",
+												"name": "impl",
+												"nameLocation": "2560:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 212,
+												"src": "2552:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 206,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2552:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2551:14:0"
+									},
+									"returnParameters": {
+										"id": 211,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 210,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 212,
+												"src": "2589:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 209,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "2589:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2588:6:0"
+									},
+									"scope": 315,
+									"src": "2529:66:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "9a8a0592",
+									"id": 217,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "chainId",
+									"nameLocation": "2608:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 213,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2615:2:0"
+									},
+									"returnParameters": {
+										"id": 216,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 215,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 217,
+												"src": "2641:6:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												},
+												"typeName": {
+													"id": 214,
+													"name": "uint16",
+													"nodeType": "ElementaryTypeName",
+													"src": "2641:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint16",
+														"typeString": "uint16"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2640:8:0"
+									},
+									"scope": 315,
+									"src": "2599:50:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "e039f224",
+									"id": 222,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "isFork",
+									"nameLocation": "2662:6:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 218,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2668:2:0"
+									},
+									"returnParameters": {
+										"id": 221,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 220,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 222,
+												"src": "2694:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 219,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "2694:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2693:6:0"
+									},
+									"scope": 315,
+									"src": "2653:47:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "fbe3c2cd",
+									"id": 227,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "governanceChainId",
+									"nameLocation": "2713:17:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 223,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2730:2:0"
+									},
+									"returnParameters": {
+										"id": 226,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 225,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 227,
+												"src": "2756:6:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												},
+												"typeName": {
+													"id": 224,
+													"name": "uint16",
+													"nodeType": "ElementaryTypeName",
+													"src": "2756:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint16",
+														"typeString": "uint16"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2755:8:0"
+									},
+									"scope": 315,
+									"src": "2704:60:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "b172b222",
+									"id": 232,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "governanceContract",
+									"nameLocation": "2777:18:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 228,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2795:2:0"
+									},
+									"returnParameters": {
+										"id": 231,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 230,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 232,
+												"src": "2821:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 229,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "2821:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2820:9:0"
+									},
+									"scope": 315,
+									"src": "2768:62:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "1a90a219",
+									"id": 237,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "messageFee",
+									"nameLocation": "2843:10:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 233,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2853:2:0"
+									},
+									"returnParameters": {
+										"id": 236,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 235,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 237,
+												"src": "2879:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 234,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2879:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2878:9:0"
+									},
+									"scope": 315,
+									"src": "2834:54:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "64d42b17",
+									"id": 242,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "evmChainId",
+									"nameLocation": "2901:10:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 238,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2911:2:0"
+									},
+									"returnParameters": {
+										"id": 241,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 240,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 242,
+												"src": "2937:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 239,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2937:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2936:9:0"
+									},
+									"scope": 315,
+									"src": "2892:54:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "4cf842b5",
+									"id": 249,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "nextSequence",
+									"nameLocation": "2959:12:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 245,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 244,
+												"mutability": "mutable",
+												"name": "emitter",
+												"nameLocation": "2980:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 249,
+												"src": "2972:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 243,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2972:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2971:17:0"
+									},
+									"returnParameters": {
+										"id": 248,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 247,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 249,
+												"src": "3012:6:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												},
+												"typeName": {
+													"id": 246,
+													"name": "uint64",
+													"nodeType": "ElementaryTypeName",
+													"src": "3012:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint64",
+														"typeString": "uint64"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3011:8:0"
+									},
+									"scope": 315,
+									"src": "2950:70:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "4fdc60fa",
+									"id": 257,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseContractUpgrade",
+									"nameLocation": "3033:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 252,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 251,
+												"mutability": "mutable",
+												"name": "encodedUpgrade",
+												"nameLocation": "3072:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 257,
+												"src": "3059:27:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 250,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3059:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3053:37:0"
+									},
+									"returnParameters": {
+										"id": 256,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 255,
+												"mutability": "mutable",
+												"name": "cu",
+												"nameLocation": "3137:2:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 257,
+												"src": "3114:25:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_ContractUpgrade_$50_memory_ptr",
+													"typeString": "struct IWormhole.ContractUpgrade"
+												},
+												"typeName": {
+													"id": 254,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 253,
+														"name": "ContractUpgrade",
+														"nameLocations": [
+															"3114:15:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 50,
+														"src": "3114:15:0"
+													},
+													"referencedDeclaration": 50,
+													"src": "3114:15:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_ContractUpgrade_$50_storage_ptr",
+														"typeString": "struct IWormhole.ContractUpgrade"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3113:27:0"
+									},
+									"scope": 315,
+									"src": "3024:117:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "04ca84cf",
+									"id": 265,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseGuardianSetUpgrade",
+									"nameLocation": "3154:23:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 260,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 259,
+												"mutability": "mutable",
+												"name": "encodedUpgrade",
+												"nameLocation": "3196:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 265,
+												"src": "3183:27:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 258,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3183:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3177:37:0"
+									},
+									"returnParameters": {
+										"id": 264,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 263,
+												"mutability": "mutable",
+												"name": "gsu",
+												"nameLocation": "3264:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 265,
+												"src": "3238:29:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_GuardianSetUpgrade_$62_memory_ptr",
+													"typeString": "struct IWormhole.GuardianSetUpgrade"
+												},
+												"typeName": {
+													"id": 262,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 261,
+														"name": "GuardianSetUpgrade",
+														"nameLocations": [
+															"3238:18:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 62,
+														"src": "3238:18:0"
+													},
+													"referencedDeclaration": 62,
+													"src": "3238:18:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_GuardianSetUpgrade_$62_storage_ptr",
+														"typeString": "struct IWormhole.GuardianSetUpgrade"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3237:31:0"
+									},
+									"scope": 315,
+									"src": "3145:124:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "515f3247",
+									"id": 273,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseSetMessageFee",
+									"nameLocation": "3282:18:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 268,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 267,
+												"mutability": "mutable",
+												"name": "encodedSetMessageFee",
+												"nameLocation": "3319:20:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 273,
+												"src": "3306:33:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 266,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3306:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3300:43:0"
+									},
+									"returnParameters": {
+										"id": 272,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 271,
+												"mutability": "mutable",
+												"name": "smf",
+												"nameLocation": "3388:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 273,
+												"src": "3367:24:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_SetMessageFee_$71_memory_ptr",
+													"typeString": "struct IWormhole.SetMessageFee"
+												},
+												"typeName": {
+													"id": 270,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 269,
+														"name": "SetMessageFee",
+														"nameLocations": [
+															"3367:13:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 71,
+														"src": "3367:13:0"
+													},
+													"referencedDeclaration": 71,
+													"src": "3367:13:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_SetMessageFee_$71_storage_ptr",
+														"typeString": "struct IWormhole.SetMessageFee"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3366:26:0"
+									},
+									"scope": 315,
+									"src": "3273:120:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "0319e59c",
+									"id": 281,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseTransferFees",
+									"nameLocation": "3406:17:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 276,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 275,
+												"mutability": "mutable",
+												"name": "encodedTransferFees",
+												"nameLocation": "3442:19:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 281,
+												"src": "3429:32:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 274,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3429:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3423:42:0"
+									},
+									"returnParameters": {
+										"id": 280,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 279,
+												"mutability": "mutable",
+												"name": "tf",
+												"nameLocation": "3509:2:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 281,
+												"src": "3489:22:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_TransferFees_$82_memory_ptr",
+													"typeString": "struct IWormhole.TransferFees"
+												},
+												"typeName": {
+													"id": 278,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 277,
+														"name": "TransferFees",
+														"nameLocations": [
+															"3489:12:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 82,
+														"src": "3489:12:0"
+													},
+													"referencedDeclaration": 82,
+													"src": "3489:12:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_TransferFees_$82_storage_ptr",
+														"typeString": "struct IWormhole.TransferFees"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3488:24:0"
+									},
+									"scope": 315,
+									"src": "3397:116:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "cb4cfea8",
+									"id": 289,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "parseRecoverChainId",
+									"nameLocation": "3526:19:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 284,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 283,
+												"mutability": "mutable",
+												"name": "encodedRecoverChainId",
+												"nameLocation": "3564:21:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 289,
+												"src": "3551:34:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 282,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3551:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3545:44:0"
+									},
+									"returnParameters": {
+										"id": 288,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 287,
+												"mutability": "mutable",
+												"name": "rci",
+												"nameLocation": "3635:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 289,
+												"src": "3613:25:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_RecoverChainId_$91_memory_ptr",
+													"typeString": "struct IWormhole.RecoverChainId"
+												},
+												"typeName": {
+													"id": 286,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 285,
+														"name": "RecoverChainId",
+														"nameLocations": [
+															"3613:14:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 91,
+														"src": "3613:14:0"
+													},
+													"referencedDeclaration": 91,
+													"src": "3613:14:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_RecoverChainId_$91_storage_ptr",
+														"typeString": "struct IWormhole.RecoverChainId"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3612:27:0"
+									},
+									"scope": 315,
+									"src": "3517:123:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "5cb8cae2",
+									"id": 294,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "submitContractUpgrade",
+									"nameLocation": "3653:21:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 292,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 291,
+												"mutability": "mutable",
+												"name": "_vm",
+												"nameLocation": "3688:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 294,
+												"src": "3675:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 290,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3675:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3674:18:0"
+									},
+									"returnParameters": {
+										"id": 293,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3701:0:0"
+									},
+									"scope": 315,
+									"src": "3644:58:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "f42bc641",
+									"id": 299,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "submitSetMessageFee",
+									"nameLocation": "3715:19:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 297,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 296,
+												"mutability": "mutable",
+												"name": "_vm",
+												"nameLocation": "3748:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 299,
+												"src": "3735:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 295,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3735:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3734:18:0"
+									},
+									"returnParameters": {
+										"id": 298,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3761:0:0"
+									},
+									"scope": 315,
+									"src": "3706:56:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "6606b4e0",
+									"id": 304,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "submitNewGuardianSet",
+									"nameLocation": "3775:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 302,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 301,
+												"mutability": "mutable",
+												"name": "_vm",
+												"nameLocation": "3809:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 304,
+												"src": "3796:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 300,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3796:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3795:18:0"
+									},
+									"returnParameters": {
+										"id": 303,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3822:0:0"
+									},
+									"scope": 315,
+									"src": "3766:57:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "93df337e",
+									"id": 309,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "submitTransferFees",
+									"nameLocation": "3836:18:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 307,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 306,
+												"mutability": "mutable",
+												"name": "_vm",
+												"nameLocation": "3868:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 309,
+												"src": "3855:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 305,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3855:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3854:18:0"
+									},
+									"returnParameters": {
+										"id": 308,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3881:0:0"
+									},
+									"scope": 315,
+									"src": "3827:55:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "178149e7",
+									"id": 314,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "submitRecoverChainId",
+									"nameLocation": "3895:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 312,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 311,
+												"mutability": "mutable",
+												"name": "_vm",
+												"nameLocation": "3929:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 314,
+												"src": "3916:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 310,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "3916:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3915:18:0"
+									},
+									"returnParameters": {
+										"id": 313,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3942:0:0"
+									},
+									"scope": 315,
+									"src": "3886:57:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 316,
+							"src": "63:3882:0",
+							"usedErrors": [],
+							"usedEvents": [
+								103,
+								109,
+								113
+							]
+						}
+					],
+					"src": "38:3908:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

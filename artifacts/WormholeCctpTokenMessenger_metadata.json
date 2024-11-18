@@ -1,0 +1,223 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"name": "CctpVaaMismatch",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidVaa",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "UnexpectedEmitter",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "To construct the contract, the addresses to the Wormhole Core Bridge and CCTP Token   Messenger must be provided. Using the CCTP Token Messenger, the Message Transmitter and Token   Minter are derived. NOTE: For more information on CCTP message formats, please refer to the following: https://developers.circle.com/stablecoins/docs/message-format.",
+			"errors": {
+				"CctpVaaMismatch(uint32,uint32,uint64)": [
+					{
+						"details": "The CCTP message's source domain, destination domain and nonce must match the VAA's. NOTE: This nonce is the one acting as the CCTP message sequence (and not the arbitrary one specified when publishing Wormhole messages)."
+					}
+				],
+				"InvalidVaa()": [
+					{
+						"details": "Parsing and verifying VAA reverted at the Wormhole Core Bridge contract level."
+					}
+				],
+				"UnexpectedEmitter(bytes32,bytes32)": [
+					{
+						"details": "The emitter of the VAA must match the expected emitter."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"stateVariables": {
+				"_chainId": {
+					"details": "Wormhole Chain ID. NOTE: This is NOT the EVM chain ID."
+				},
+				"_localCctpDomain": {
+					"details": "CCTP domain for this network (configured by the CCTP Message Transmitter)."
+				},
+				"_messageTransmitter": {
+					"details": "CCTP Message Transmitter contract interface."
+				},
+				"_tokenMessenger": {
+					"details": "CCTP Token Messenger contract interface."
+				},
+				"_tokenMinter": {
+					"details": "CCTP Token Minter contract interface."
+				},
+				"_wormhole": {
+					"details": "Wormhole Core Bridge contract address.  "
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "A way to associate a CCTP token burn message with a Wormhole message.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/WormholeCctpTokenMessenger.sol": "WormholeCctpTokenMessenger"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/Utils.sol": {
+			"keccak256": "0x1d421687ee6a489fef6a77c5a3655108adda57b60ac9d3d311824ab1b0a8ecad",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://17400d873b2a88b3f8566cdbd32bf2840f8d849c1226744cd7aa834af0b2ffd1",
+				"dweb:/ipfs/QmTYUPYJZrbkaUUEGc2mCxNrA3Q4Zv7TTXWfvo79nSFM5c"
+			]
+		},
+		"src/WormholeCctpTokenMessenger.sol": {
+			"keccak256": "0x2dfca6fd70637353eef6021f18acd69a9ae6a3459eb91d70e54fd1d812231da5",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://1fc4a0904f5ab1432eda174bad7ffd4a39cb2a0499c6b86277632c975f923d37",
+				"dweb:/ipfs/QmZtL9ZpQFhUETLLAagCULN8pvWpYzF9EyPDAJNw4jt9qi"
+			]
+		},
+		"src/constants/Common.sol": {
+			"keccak256": "0x6a44737126229c24e5477d65c521856cfaaf26a7dc80241c984a7331af949b2d",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://342004cc593f4226ef9b579cbec82b29e69ef9fad5c4b8e62dc3fe3849f83c67",
+				"dweb:/ipfs/QmV7KGkxv5SfeY8V2YQv2Mf5Zxu1MfrXooexffRvWQx5Qk"
+			]
+		},
+		"src/constants/ConsistencyLevel.sol": {
+			"keccak256": "0xc2d4cdc74794ca09d63dc355b60867b14348805eaaad4eb74cd637c54165808c",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://d7db2337af705778bd96a0ac694498c5c60e44edd30cab5b787ead5519dfa3ad",
+				"dweb:/ipfs/QmQQ4oV7BUwNvkzGtuUnvxPQx2KS3oZLXQJth8nnhW2oEK"
+			]
+		},
+		"src/interfaces/IWormhole.sol": {
+			"keccak256": "0xb8dafb6b01a693ea79536abc1ca055aff2f72e918329403ac261e6429db12206",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://c52009a321ee86ce2a222f7ebd560a93210d7990525053895af5353323a77099",
+				"dweb:/ipfs/QmT3gE2nKsYiSuUg2EeiHoHN6BRWks549Yjej1qdvipjCT"
+			]
+		},
+		"src/interfaces/cctp/IMessageTransmitter.sol": {
+			"keccak256": "0x8736b2a5ff5324bc690e1878eeda9d7e7556520c6d76ce9a4f4fc7c48b57574f",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://afd602e25284682e26d3ab48820aeae6f8f836e7017d3924caa628a54356f27c",
+				"dweb:/ipfs/QmW9P5jqggVW9hbaXx8xxKjvFY1q5yCNCiUYopMMxSBk7n"
+			]
+		},
+		"src/interfaces/cctp/ITokenMessenger.sol": {
+			"keccak256": "0x979aaeba90813930d383f90c6e0a793e043d46ac8f802cc0d1008699194194e9",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://de48971bbac71f0396d3b0e3885f9fc72d33dded2d10b3993588450ab9de85ce",
+				"dweb:/ipfs/QmcUHyg5wSMY5cHFCenTu99QNT4W7UJB85B928iVzkwnds"
+			]
+		},
+		"src/interfaces/cctp/ITokenMinter.sol": {
+			"keccak256": "0x015329fe60852bdfcf92f4dff542dffda525cbd7d74626709f0f8c7347a8d181",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://f62c0c2d25333d745ecdc288ee3f1c69e60d684c963c04f5d8bb1be110ef5189",
+				"dweb:/ipfs/QmdZRnUKDXzD6xP1b91YJyYQvdgH7sFfkro8AQyFVXXzhQ"
+			]
+		},
+		"src/interfaces/cctp/shared/IOwnable2Step.sol": {
+			"keccak256": "0x3a28d75b5fc6308f2669672c0758447d081627902ce516faebc4774ded78d76e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://dca33ea2f95ae7752a315283b6df7d474f99b656fe5b2859fe6fea38328f196b",
+				"dweb:/ipfs/QmevQThqioPtJ7E95z7hLdFQaPUUmdSq11Dm3gE9vwJa4x"
+			]
+		},
+		"src/interfaces/cctp/shared/IPausable.sol": {
+			"keccak256": "0xf877d8d6754f0a931dbabf9ae1a2ab0ca6bf78bb71f36304c5f100f8819b2d16",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://65d9141d8a4c1fc1ac5f3a4fdad32dfc1345fb2db148b7b653f1585e0f24f1fd",
+				"dweb:/ipfs/QmZHJwn5NCseNHjY8b8FU3PzWDFpVFhvxyrP9b75GfDNkM"
+			]
+		},
+		"src/interfaces/token/IERC20.sol": {
+			"keccak256": "0xe75b807a38a1f24481fcc5783ec1c2cee288a6bf4475f4cdc1363b408fb34f56",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://dfa2f3989344e0196482a471af69b582123a9671a088386c77d63cf3ab567fcc",
+				"dweb:/ipfs/QmPAxkdauaxByqPbsXqLtNMikRm45bdA1jnRRuwBBcCXbP"
+			]
+		},
+		"src/libraries/BytesParsing.sol": {
+			"keccak256": "0x24a996f787ddf4277f768d898885d2bafc70773bbbb56e28fc78750e0128f822",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://2c32fbf566a3cf29387c053d2627d490605995c5f9cf61a02ac63b61cf18d858",
+				"dweb:/ipfs/QmVRc3nDYpEybqSc3dVT9FAPs6AzjgAujvJnkFc1bukvr7"
+			]
+		},
+		"src/libraries/WormholeCctpMessages.sol": {
+			"keccak256": "0x647c4e0e90f519e093db9cf2b6c5b4fd12de424dd7821d0d9c960013e4e8b185",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://fa8d5e98dd57823414f3d8b8bfa5aabb606e9a25efc13dd5efca238dc6c99a51",
+				"dweb:/ipfs/Qmc6kD1RS3WyEg6CX732W9om1svPXeWXsUyiWMQv4urcyo"
+			]
+		}
+	},
+	"version": 1
+}

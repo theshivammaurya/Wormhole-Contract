@@ -1,0 +1,215 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "payload",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes[]",
+						"name": "additionalMessages",
+						"type": "bytes[]"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "sourceAddress",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "sourceChain",
+						"type": "uint16"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "deliveryHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "receiveWormholeMessages",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint16",
+						"name": "sourceChain",
+						"type": "uint16"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "sourceAddress",
+						"type": "bytes32"
+					}
+				],
+				"name": "setRegisteredSender",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "wormhole",
+				"outputs": [
+					{
+						"internalType": "contract IWormhole",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "wormholeRelayer",
+				"outputs": [
+					{
+						"internalType": "contract IWormholeRelayer",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"setRegisteredSender(uint16,bytes32)": {
+					"notice": "Sets the registered address for 'sourceChain' to 'sourceAddress' So that for messages from 'sourceChain', only ones from 'sourceAddress' are valid Assumes only one sender per chain is valid Sender is the address that called 'send' on the Wormhole Relayer contract on the source chain)"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/WormholeRelayer/CCTPBase.sol": "CCTPReceiver"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/Utils.sol": {
+			"keccak256": "0x1d421687ee6a489fef6a77c5a3655108adda57b60ac9d3d311824ab1b0a8ecad",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://17400d873b2a88b3f8566cdbd32bf2840f8d849c1226744cd7aa834af0b2ffd1",
+				"dweb:/ipfs/QmTYUPYJZrbkaUUEGc2mCxNrA3Q4Zv7TTXWfvo79nSFM5c"
+			]
+		},
+		"src/WormholeRelayer/Base.sol": {
+			"keccak256": "0x4f7d7f3d64d6a5e08bec73bc652c4ad1e78667eb38a9c74880b12c4abc3ba36e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://6999e6eb2a70e3cb4b997c2eaa1faf5144ed2963e264989c54b4b788cba39703",
+				"dweb:/ipfs/QmNnLJGABapzHqhBQB7sMZXa663XYwnfB1ZYihWQQw3kHf"
+			]
+		},
+		"src/WormholeRelayer/CCTPBase.sol": {
+			"keccak256": "0xffb429d1bd744930556f77029fb066478ab333a50f3df4115ec33040b2eabec3",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://33125d0a8dee5807ce8e073cb6a62882d2a0bb5beaf891888252599575be40c5",
+				"dweb:/ipfs/QmcZZX5NGAsjc36nF5Q7QM6297UrYmjXqqVfV39Bj5LQXN"
+			]
+		},
+		"src/interfaces/IWormhole.sol": {
+			"keccak256": "0xb8dafb6b01a693ea79536abc1ca055aff2f72e918329403ac261e6429db12206",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://c52009a321ee86ce2a222f7ebd560a93210d7990525053895af5353323a77099",
+				"dweb:/ipfs/QmT3gE2nKsYiSuUg2EeiHoHN6BRWks549Yjej1qdvipjCT"
+			]
+		},
+		"src/interfaces/IWormholeReceiver.sol": {
+			"keccak256": "0x9d5560e3673b9e920f9865454fd88138f02d3a68097c20f30d50304398d102e3",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://f0952a2e8d352254b6abcc320a0ed87bf12e990b804462d32471c429f141a187",
+				"dweb:/ipfs/QmWD8nqYGF1Y26zTvfAzAZFvYiEW8eTdkNZcYMy5KqPXpZ"
+			]
+		},
+		"src/interfaces/IWormholeRelayer.sol": {
+			"keccak256": "0x4a73a6cf88f501da70652d3b550ad599a5b75e028e82fb3315729882d97add9e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://4552bc84e8c7f92c7b4eddd71ab7fe5273b265c90d1cbf5b901fa48dcbc383ec",
+				"dweb:/ipfs/QmemXDq6UTMmfsg8vheB2NvUvXTgbXX9mYcxPM3z9MLqUG"
+			]
+		},
+		"src/interfaces/cctp/IMessageTransmitter.sol": {
+			"keccak256": "0x8736b2a5ff5324bc690e1878eeda9d7e7556520c6d76ce9a4f4fc7c48b57574f",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://afd602e25284682e26d3ab48820aeae6f8f836e7017d3924caa628a54356f27c",
+				"dweb:/ipfs/QmW9P5jqggVW9hbaXx8xxKjvFY1q5yCNCiUYopMMxSBk7n"
+			]
+		},
+		"src/interfaces/cctp/ITokenMessenger.sol": {
+			"keccak256": "0x979aaeba90813930d383f90c6e0a793e043d46ac8f802cc0d1008699194194e9",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://de48971bbac71f0396d3b0e3885f9fc72d33dded2d10b3993588450ab9de85ce",
+				"dweb:/ipfs/QmcUHyg5wSMY5cHFCenTu99QNT4W7UJB85B928iVzkwnds"
+			]
+		},
+		"src/interfaces/cctp/ITokenMinter.sol": {
+			"keccak256": "0x015329fe60852bdfcf92f4dff542dffda525cbd7d74626709f0f8c7347a8d181",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://f62c0c2d25333d745ecdc288ee3f1c69e60d684c963c04f5d8bb1be110ef5189",
+				"dweb:/ipfs/QmdZRnUKDXzD6xP1b91YJyYQvdgH7sFfkro8AQyFVXXzhQ"
+			]
+		},
+		"src/interfaces/cctp/shared/IOwnable2Step.sol": {
+			"keccak256": "0x3a28d75b5fc6308f2669672c0758447d081627902ce516faebc4774ded78d76e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://dca33ea2f95ae7752a315283b6df7d474f99b656fe5b2859fe6fea38328f196b",
+				"dweb:/ipfs/QmevQThqioPtJ7E95z7hLdFQaPUUmdSq11Dm3gE9vwJa4x"
+			]
+		},
+		"src/interfaces/cctp/shared/IPausable.sol": {
+			"keccak256": "0xf877d8d6754f0a931dbabf9ae1a2ab0ca6bf78bb71f36304c5f100f8819b2d16",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://65d9141d8a4c1fc1ac5f3a4fdad32dfc1345fb2db148b7b653f1585e0f24f1fd",
+				"dweb:/ipfs/QmZHJwn5NCseNHjY8b8FU3PzWDFpVFhvxyrP9b75GfDNkM"
+			]
+		},
+		"src/interfaces/token/IERC20.sol": {
+			"keccak256": "0xe75b807a38a1f24481fcc5783ec1c2cee288a6bf4475f4cdc1363b408fb34f56",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://dfa2f3989344e0196482a471af69b582123a9671a088386c77d63cf3ab567fcc",
+				"dweb:/ipfs/QmPAxkdauaxByqPbsXqLtNMikRm45bdA1jnRRuwBBcCXbP"
+			]
+		}
+	},
+	"version": 1
+}

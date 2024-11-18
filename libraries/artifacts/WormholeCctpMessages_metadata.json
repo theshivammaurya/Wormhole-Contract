@@ -1,0 +1,94 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "InvalidMessage",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "PayloadTooLarge",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/libraries/WormholeCctpMessages.sol": "WormholeCctpMessages"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/Utils.sol": {
+			"keccak256": "0x1d421687ee6a489fef6a77c5a3655108adda57b60ac9d3d311824ab1b0a8ecad",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://17400d873b2a88b3f8566cdbd32bf2840f8d849c1226744cd7aa834af0b2ffd1",
+				"dweb:/ipfs/QmTYUPYJZrbkaUUEGc2mCxNrA3Q4Zv7TTXWfvo79nSFM5c"
+			]
+		},
+		"src/constants/Common.sol": {
+			"keccak256": "0x6a44737126229c24e5477d65c521856cfaaf26a7dc80241c984a7331af949b2d",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://342004cc593f4226ef9b579cbec82b29e69ef9fad5c4b8e62dc3fe3849f83c67",
+				"dweb:/ipfs/QmV7KGkxv5SfeY8V2YQv2Mf5Zxu1MfrXooexffRvWQx5Qk"
+			]
+		},
+		"src/interfaces/IWormhole.sol": {
+			"keccak256": "0xb8dafb6b01a693ea79536abc1ca055aff2f72e918329403ac261e6429db12206",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://c52009a321ee86ce2a222f7ebd560a93210d7990525053895af5353323a77099",
+				"dweb:/ipfs/QmT3gE2nKsYiSuUg2EeiHoHN6BRWks549Yjej1qdvipjCT"
+			]
+		},
+		"src/libraries/BytesParsing.sol": {
+			"keccak256": "0x24a996f787ddf4277f768d898885d2bafc70773bbbb56e28fc78750e0128f822",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://2c32fbf566a3cf29387c053d2627d490605995c5f9cf61a02ac63b61cf18d858",
+				"dweb:/ipfs/QmVRc3nDYpEybqSc3dVT9FAPs6AzjgAujvJnkFc1bukvr7"
+			]
+		},
+		"src/libraries/WormholeCctpMessages.sol": {
+			"keccak256": "0x647c4e0e90f519e093db9cf2b6c5b4fd12de424dd7821d0d9c960013e4e8b185",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://fa8d5e98dd57823414f3d8b8bfa5aabb606e9a25efc13dd5efca238dc6c99a51",
+				"dweb:/ipfs/Qmc6kD1RS3WyEg6CX732W9om1svPXeWXsUyiWMQv4urcyo"
+			]
+		}
+	},
+	"version": 1
+}

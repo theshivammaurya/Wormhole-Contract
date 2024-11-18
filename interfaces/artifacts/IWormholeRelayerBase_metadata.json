@@ -1,0 +1,157 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint64",
+						"name": "sequence",
+						"type": "uint64"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deliveryQuote",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "paymentForExtraReceiverValue",
+						"type": "uint256"
+					}
+				],
+				"name": "SendEvent",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "deliveryHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "deliveryAttempted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "attempted",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "deliveryHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "deliveryFailureBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "deliveryHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "deliverySuccessBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint16",
+						"name": "chainId",
+						"type": "uint16"
+					}
+				],
+				"name": "getRegisteredWormholeRelayerContract",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"deliveryAttempted(bytes32)": {
+					"notice": "Returns true if a delivery has been attempted for the given deliveryHash Note: invalid deliveries where the tx reverts are not considered attempted"
+				},
+				"deliveryFailureBlock(bytes32)": {
+					"notice": "block number of the latest attempt to execute a delivery that failed"
+				},
+				"deliverySuccessBlock(bytes32)": {
+					"notice": "block number at which a delivery was successfully executed"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/interfaces/IWormholeRelayer.sol": "IWormholeRelayerBase"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/interfaces/IWormholeRelayer.sol": {
+			"keccak256": "0x4a73a6cf88f501da70652d3b550ad599a5b75e028e82fb3315729882d97add9e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://4552bc84e8c7f92c7b4eddd71ab7fe5273b265c90d1cbf5b901fa48dcbc383ec",
+				"dweb:/ipfs/QmemXDq6UTMmfsg8vheB2NvUvXTgbXX9mYcxPM3z9MLqUG"
+			]
+		}
+	},
+	"version": 1
+}

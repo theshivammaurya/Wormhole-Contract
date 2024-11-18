@@ -1,0 +1,242 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					}
+				],
+				"name": "AttesterDisabled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					}
+				],
+				"name": "AttesterEnabled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousAttesterManager",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAttesterManager",
+						"type": "address"
+					}
+				],
+				"name": "AttesterManagerUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldSignatureThreshold",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSignatureThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "SignatureThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "attesterManager",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					}
+				],
+				"name": "disableAttester",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					}
+				],
+				"name": "enableAttester",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getEnabledAttester",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getNumEnabledAttesters",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					}
+				],
+				"name": "isEnabledAttester",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSignatureThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "setSignatureThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newAttesterManager",
+						"type": "address"
+					}
+				],
+				"name": "updateAttesterManager",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/interfaces/cctp/IMessageTransmitter.sol": "IAttestable"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/interfaces/cctp/IMessageTransmitter.sol": {
+			"keccak256": "0x8736b2a5ff5324bc690e1878eeda9d7e7556520c6d76ce9a4f4fc7c48b57574f",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://afd602e25284682e26d3ab48820aeae6f8f836e7017d3924caa628a54356f27c",
+				"dweb:/ipfs/QmW9P5jqggVW9hbaXx8xxKjvFY1q5yCNCiUYopMMxSBk7n"
+			]
+		},
+		"src/interfaces/cctp/shared/IOwnable2Step.sol": {
+			"keccak256": "0x3a28d75b5fc6308f2669672c0758447d081627902ce516faebc4774ded78d76e",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://dca33ea2f95ae7752a315283b6df7d474f99b656fe5b2859fe6fea38328f196b",
+				"dweb:/ipfs/QmevQThqioPtJ7E95z7hLdFQaPUUmdSq11Dm3gE9vwJa4x"
+			]
+		},
+		"src/interfaces/cctp/shared/IPausable.sol": {
+			"keccak256": "0xf877d8d6754f0a931dbabf9ae1a2ab0ca6bf78bb71f36304c5f100f8819b2d16",
+			"license": "Apache 2",
+			"urls": [
+				"bzz-raw://65d9141d8a4c1fc1ac5f3a4fdad32dfc1345fb2db148b7b653f1585e0f24f1fd",
+				"dweb:/ipfs/QmZHJwn5NCseNHjY8b8FU3PzWDFpVFhvxyrP9b75GfDNkM"
+			]
+		}
+	},
+	"version": 1
+}

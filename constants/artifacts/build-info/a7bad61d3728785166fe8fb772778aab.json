@@ -1,0 +1,254 @@
+{
+	"id": "a7bad61d3728785166fe8fb772778aab",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"src/constants/Common.sol": {
+				"content": "// SPDX-License-Identifier: Apache 2\npragma solidity ^0.8.4;\n\nuint256 constant FREE_MEMORY_PTR = 0x40;\nuint256 constant WORD_SIZE = 32;\n//we can't define _WORD_SIZE_MINUS_ONE via _WORD_SIZE - 1 because of solc restrictions\n//  what constants can be used in inline assembly\nuint256 constant WORD_SIZE_MINUS_ONE = 31; //=0x1f=0b00011111\n\n//see section \"prefer `< MAX + 1` over `<= MAX` for const comparison\" in docs/Optimization.md\nuint256 constant WORD_SIZE_PLUS_ONE = 33;\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"sources": {
+			"src/constants/Common.sol": {
+				"ast": {
+					"absolutePath": "src/constants/Common.sol",
+					"exportedSymbols": {
+						"FREE_MEMORY_PTR": [
+							4
+						],
+						"WORD_SIZE": [
+							7
+						],
+						"WORD_SIZE_MINUS_ONE": [
+							10
+						],
+						"WORD_SIZE_PLUS_ONE": [
+							13
+						]
+					},
+					"id": 14,
+					"license": "Apache 2",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "37:23:0"
+						},
+						{
+							"constant": true,
+							"id": 4,
+							"mutability": "constant",
+							"name": "FREE_MEMORY_PTR",
+							"nameLocation": "79:15:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 14,
+							"src": "62:39:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint256",
+								"typeString": "uint256"
+							},
+							"typeName": {
+								"id": 2,
+								"name": "uint256",
+								"nodeType": "ElementaryTypeName",
+								"src": "62:7:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint256",
+									"typeString": "uint256"
+								}
+							},
+							"value": {
+								"hexValue": "30783430",
+								"id": 3,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "97:4:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_64_by_1",
+									"typeString": "int_const 64"
+								},
+								"value": "0x40"
+							},
+							"visibility": "internal"
+						},
+						{
+							"constant": true,
+							"id": 7,
+							"mutability": "constant",
+							"name": "WORD_SIZE",
+							"nameLocation": "120:9:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 14,
+							"src": "103:31:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint256",
+								"typeString": "uint256"
+							},
+							"typeName": {
+								"id": 5,
+								"name": "uint256",
+								"nodeType": "ElementaryTypeName",
+								"src": "103:7:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint256",
+									"typeString": "uint256"
+								}
+							},
+							"value": {
+								"hexValue": "3332",
+								"id": 6,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "132:2:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_32_by_1",
+									"typeString": "int_const 32"
+								},
+								"value": "32"
+							},
+							"visibility": "internal"
+						},
+						{
+							"constant": true,
+							"id": 10,
+							"mutability": "constant",
+							"name": "WORD_SIZE_MINUS_ONE",
+							"nameLocation": "290:19:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 14,
+							"src": "273:41:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint256",
+								"typeString": "uint256"
+							},
+							"typeName": {
+								"id": 8,
+								"name": "uint256",
+								"nodeType": "ElementaryTypeName",
+								"src": "273:7:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint256",
+									"typeString": "uint256"
+								}
+							},
+							"value": {
+								"hexValue": "3331",
+								"id": 9,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "312:2:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_31_by_1",
+									"typeString": "int_const 31"
+								},
+								"value": "31"
+							},
+							"visibility": "internal"
+						},
+						{
+							"constant": true,
+							"id": 13,
+							"mutability": "constant",
+							"name": "WORD_SIZE_PLUS_ONE",
+							"nameLocation": "447:18:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 14,
+							"src": "430:40:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint256",
+								"typeString": "uint256"
+							},
+							"typeName": {
+								"id": 11,
+								"name": "uint256",
+								"nodeType": "ElementaryTypeName",
+								"src": "430:7:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint256",
+									"typeString": "uint256"
+								}
+							},
+							"value": {
+								"hexValue": "3333",
+								"id": 12,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "468:2:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_33_by_1",
+									"typeString": "int_const 33"
+								},
+								"value": "33"
+							},
+							"visibility": "internal"
+						}
+					],
+					"src": "37:435:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

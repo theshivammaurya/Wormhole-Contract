@@ -1,0 +1,208 @@
+{
+	"id": "a24f94d0c140afd837684bb0fa4eab14",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"src/constants/ConsistencyLevel.sol": {
+				"content": "// SPDX-License-Identifier: Apache 2\npragma solidity ^0.8.4;\n\nuint8 constant CONSISTENCY_LEVEL_INSTANT   = 200;\nuint8 constant CONSISTENCY_LEVEL_SAFE      = 201;\nuint8 constant CONSISTENCY_LEVEL_FINALIZED =   1;\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"sources": {
+			"src/constants/ConsistencyLevel.sol": {
+				"ast": {
+					"absolutePath": "src/constants/ConsistencyLevel.sol",
+					"exportedSymbols": {
+						"CONSISTENCY_LEVEL_FINALIZED": [
+							10
+						],
+						"CONSISTENCY_LEVEL_INSTANT": [
+							4
+						],
+						"CONSISTENCY_LEVEL_SAFE": [
+							7
+						]
+					},
+					"id": 11,
+					"license": "Apache 2",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "37:23:0"
+						},
+						{
+							"constant": true,
+							"id": 4,
+							"mutability": "constant",
+							"name": "CONSISTENCY_LEVEL_INSTANT",
+							"nameLocation": "77:25:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 11,
+							"src": "62:48:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint8",
+								"typeString": "uint8"
+							},
+							"typeName": {
+								"id": 2,
+								"name": "uint8",
+								"nodeType": "ElementaryTypeName",
+								"src": "62:5:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint8",
+									"typeString": "uint8"
+								}
+							},
+							"value": {
+								"hexValue": "323030",
+								"id": 3,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "107:3:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_200_by_1",
+									"typeString": "int_const 200"
+								},
+								"value": "200"
+							},
+							"visibility": "internal"
+						},
+						{
+							"constant": true,
+							"id": 7,
+							"mutability": "constant",
+							"name": "CONSISTENCY_LEVEL_SAFE",
+							"nameLocation": "127:22:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 11,
+							"src": "112:48:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint8",
+								"typeString": "uint8"
+							},
+							"typeName": {
+								"id": 5,
+								"name": "uint8",
+								"nodeType": "ElementaryTypeName",
+								"src": "112:5:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint8",
+									"typeString": "uint8"
+								}
+							},
+							"value": {
+								"hexValue": "323031",
+								"id": 6,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "157:3:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_201_by_1",
+									"typeString": "int_const 201"
+								},
+								"value": "201"
+							},
+							"visibility": "internal"
+						},
+						{
+							"constant": true,
+							"id": 10,
+							"mutability": "constant",
+							"name": "CONSISTENCY_LEVEL_FINALIZED",
+							"nameLocation": "177:27:0",
+							"nodeType": "VariableDeclaration",
+							"scope": 11,
+							"src": "162:48:0",
+							"stateVariable": false,
+							"storageLocation": "default",
+							"typeDescriptions": {
+								"typeIdentifier": "t_uint8",
+								"typeString": "uint8"
+							},
+							"typeName": {
+								"id": 8,
+								"name": "uint8",
+								"nodeType": "ElementaryTypeName",
+								"src": "162:5:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_uint8",
+									"typeString": "uint8"
+								}
+							},
+							"value": {
+								"hexValue": "31",
+								"id": 9,
+								"isConstant": false,
+								"isLValue": false,
+								"isPure": true,
+								"kind": "number",
+								"lValueRequested": false,
+								"nodeType": "Literal",
+								"src": "209:1:0",
+								"typeDescriptions": {
+									"typeIdentifier": "t_rational_1_by_1",
+									"typeString": "int_const 1"
+								},
+								"value": "1"
+							},
+							"visibility": "internal"
+						}
+					],
+					"src": "37:175:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}
